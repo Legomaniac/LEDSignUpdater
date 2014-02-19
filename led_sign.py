@@ -5,6 +5,9 @@ from httplib2 import Http
 import random
 import json
 import socket
+import locale
+
+locale.setlocale(locale.LC_ALL, '')
 
 btcguild = "https://www.btcguild.com/api.php?api_key=cf2ca3cf591ae16ba923fcf857c6f6ee"
 coinbase = "https://coinbase.com/api/v1/currencies/exchange_rates"
@@ -22,12 +25,12 @@ data = urllib2.urlopen(req).read()
 p = json.loads(data)
 value = p["btc_to_usd"]
 earned_usd = float(value) * float(earned)
-earnedString = str(round(earned_usd,2))
+earnedString = "\\" + locale.currency(round(earned_usd,2))
 coinsString = str(earned*1000)
 mBTC = total*1000
 mBTCString = str(mBTC)
 total_usd = float(value) * float(total)
-totalString = str(round(total_usd,2))
+totalString = "\\" + locale.currency(round(total_usd,2))
 
 # HOLY FUCKING SHIT I GOT IT
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -68,7 +71,7 @@ def led_sign_weather_print():
     tempC = w['temp_c']
     broString = "<FE> It's " + str(tempF) + " F   (" + str(tempC) + "C) outside, " + random.choice(bros) + " "
     print time.asctime()
-    datString = broString + "at " + time.asctime() + " and we earned <FL><CM>\$"  + earnedString + " mining<CG><FR>" + coinsString + " mBTC <CP>today, for a total of <FN><CD>" + mBTCString + " mBTC  valued at <CM>\$" + totalString + "    <CP>Uptime on the miner is " + formatTime + "  <FF>"
+    datString = broString + "at " + time.asctime() + " and we earned <FL><CM>"  + earnedString + " mining<CG><FR>" + coinsString + " mBTC <CP>today, for a total of <FN><CD>" + mBTCString + " mBTC  valued at <CM>" + totalString + "    <CP>Uptime on the miner is " + formatTime + "  <FF>"
     print datString
     formatedOutput = urllib2.quote(datString)
     finalOutput = "http://localhost:1337/sign.php?textToPost=" + formatedOutput
