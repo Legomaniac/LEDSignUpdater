@@ -7,7 +7,7 @@ import json
 import socket
 
 btcguild = "https://www.btcguild.com/api.php?api_key=cf2ca3cf591ae16ba923fcf857c6f6ee"
-mtgox = "http://data.mtgox.com/api/1/BTCUSD/ticker"
+coinbase = "https://coinbase.com/api/v1/currencies/exchange_rates"
 miner = "192.168.1.143"
 minerPort = 4028
 
@@ -17,10 +17,10 @@ p = json.loads(data)
 earned = p["user"]["past_24h_rewards"]
 total = p["user"]["total_rewards"]
 
-req = urllib2.Request(mtgox, headers={'User-Agent' : "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36"})
+req = urllib2.Request(coinbase, headers={'User-Agent' : "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36"})
 data = urllib2.urlopen(req).read()
 p = json.loads(data)
-value = p["return"]["avg"]["value"]
+value = p["btc_to_usd"]
 earned_usd = float(value) * float(earned)
 earnedString = str(round(earned_usd,2))
 coinsString = str(earned*1000)
@@ -68,7 +68,7 @@ def led_sign_weather_print():
     tempC = w['temp_c']
     broString = "<FE> It's " + str(tempF) + " F   (" + str(tempC) + "C) outside, " + random.choice(bros) + " "
     print time.asctime()
-    datString = broString + "at " + time.asctime() + " and we earned <FL><CM>\$"  + earnedString + " mining<CG><FR>" + coinsString + " mBTC <CP>today, for a total of <FN><CD>" + mBTCString + " mBTC!  valued at <CM>\$" + totalString + "    <CP>Uptime on the miner is " + formatTime + "  <FF>"
+    datString = broString + "at " + time.asctime() + " and we earned <FL><CM>\$"  + earnedString + " mining<CG><FR>" + coinsString + " mBTC <CP>today, for a total of <FN><CD>" + mBTCString + " mBTC  valued at <CM>\$" + totalString + "    <CP>Uptime on the miner is " + formatTime + "  <FF>"
     print datString
     formatedOutput = urllib2.quote(datString)
     finalOutput = "http://localhost:1337/sign.php?textToPost=" + formatedOutput
